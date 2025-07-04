@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modern Weighing Bridge Pass</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Arvo:wght@700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#2563eb',
+            secondary: '#1e40af',
+            accent: '#f97316',
+            dark: '#1e293b',
+            light: '#f8fafc'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Courier New',       ;
+    }
+    
+    body {
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .header-title {
+      font-family: 'Arvo', serif;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+    
+    .card {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+    
+    .card:hover {
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+      transform: translateY(-2px);
+    }
+    
+    .input-field {
+      transition: all 0.3s ease;
+      border: 1px solid #cbd5e1;
+    }
+    
+    .btn {
+      transition: all 0.3s ease;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .btn:active {
+      transform: translateY(1px);
+    }
+    
+    .btn-primary {
+      background: linear-gradient(to right, #2563eb, #1d4ed8);
+    }
+    
+    .btn-secondary {
+      background: linear-gradient(to right, #10b981, #059669);
+    }
+    
+    .pass-container {
+      border: 1px solid #cbd5e1;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .pass-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 8px;
+    
+    }
+    
+    .pass-title {
+      font-family: 'Arvo', serif;
+      text-shadow: 1px 1px 1px rgba(0,0,0,0.1);
+      letter-spacing: 0.5px;
+    }
+    
+    .pass-divider {
+      height: 2px;
+    }
+    
+    .dashed-divider {
+      border: 1px dashed #727476;
+    }
+    
+    .value-highlight {
+      font-weight: 600;
+    }
+
+    .box {
+      width: 600px;               /* Set the width of the box */
+      height: 315px  ;              /* Set the height of the box */
+      background-color: #ffffff;  /* Set background color */
+      border: 1px solid #333;     /* Add a border */
+      padding: 18px auto;              /* Add space inside the box */
+      margin: 20px auto; 
+    }
+
+    .uppercase-input {
+      text-transform: uppercase;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="max-w-6xl mx-auto">
+    <!-- Header -->
+    <header class="text-center mb-8">
+      <h1 class="header-title text-4xl md:text-5xl font-bold text-dark mb-2">WEIGHING BRIDGE PASS SYSTEM</h1>
+      <p class="text-lg text-slate-600">Generate professional weighing bridge passes with ease</p>
+    </header>
+    
+    <!-- Form Section -->
+    <section class="card p-6 mb-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Serial Number</label>
+          <input id="srno" placeholder="751" class="input-field w-full p-3 rounded-lg focus:outline-none" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Vehicle Number</label>
+          <input id="vehicleno" placeholder="GJ05BX1625" class="input-field w-full p-3 rounded-lg focus:outline-none" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Material</label>
+          <input id="material" placeholder="20 MM" class="input-field w-full p-3 rounded-lg focus:outline-none" />
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Royalty Pass No</label>
+          <input id="roypass" placeholder="26199" class="input-field w-full p-3 rounded-lg focus:outline-none" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Gross Weight (tons)</label>
+          <input id="grosswt" placeholder="45.270" class="input-field w-full p-3 rounded-lg focus:outline-none" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Tare Weight (tons)</label>
+          <input id="tarewt" placeholder="13.600" class="input-field w-full p-3 rounded-lg focus:outline-none" />
+        </div>
+        <div class="flex items-end">
+          <button onclick="calculateNetWeight()" class="btn w-full p-3 text-black text-center rounded-lg">
+            <i class="fas fa-calculator mr-2"></i>Calculate Net
+          </button>
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Net Weight (tons)</label>
+          <div id="netwtDisplay" class="bg-orange-100 p-3 rounded-lg font-bold text-orange-800">31.670</div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Date</label>
+          <input type="date" id="manualDate" class="input-field w-full p-3 rounded-lg focus:outline-none" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Time (HH:MM)</label>
+          <input type="text" id="manualTime" placeholder="HH:MM" class="input-field w-full p-3 rounded-lg focus:outline-none" />
+        </div>
+      </div>
+      
+      <div class="flex flex-wrap gap-4 justify-center mt-8">
+        <button type="button" onclick="generatePasses()" class="btn btn-primary px-8 py-3 text-white text-lg">
+          <i class="fas fa-file-alt mr-2"></i>Generate Passes
+        </button>
+        <button type="button" onclick="downloadJPEG()" class="btn bg-purple-700 px-8 py-3 text-white text-lg">
+          <i class="fas fa-image mr-2"></i>Download JPEG
+        </button>
+        <button type="button" onclick="printPasses()" class="btn bg-slate-700 px-8 py-3 text-white text-lg">
+          <i class="fas fa-print mr-2"></i>Print Passes
+        </button>
+      </div>
+
+    </section>
+    
+    <!-- Output Section -->
+    <section id="outputSection" class="hidden">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-2xl font-bold text-dark">Generated Passes</h2>
+        <div class="flex gap-2">
+          <button onclick="downloadPDF()" class="btn btn-secondary px-4 py-2 text-white">
+            <i class="fas fa-file-pdf mr-1"></i>PDF
+          </button>
+          <button onclick="printPasses()" class="btn bg-slate-700 px-4 py-2 text-white">
+            <i class="fas fa-print mr-1"></i>Print
+          </button>
+        </div>
+      </div>
+      
+      <!-- A4 Output Container -->
+      <div id="a4page" class="mx-auto bg-white border" style="width: 200mm; min-height: 200mm; padding-left: 20mm; padding-right: 20mm; padding-top: 10mm; padding-bottom: 10mm;">
+    <!-- Passes will be inserted here -->
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // Initialize with current date/time
+    document.addEventListener('DOMContentLoaded', function() {
+      const now = new Date();
+      const dd = String(now.getDate()).padStart(2, '0');
+      const mm = String(now.getMonth() + 1).padStart(2, '0');
+      const yyyy = now.getFullYear();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      
+      document.getElementById('manualDate').value = `${yyyy}-${mm}-${dd}`;
+      document.getElementById('manualTime').value = `${hours}:${minutes}`;
+
+      const vehicleInput = document.getElementById('vehicleno');
+      vehicleInput.addEventListener('input', function() {
+        this.value = this.value.toUpperCase();
+      });
+    });
+    
+    function getCurrentDateTime() {
+      let date = document.getElementById('manualDate').value;
+      let time = document.getElementById('manualTime').value;
+
+      if (date && time) {
+        const dateParts = date.split('-').reverse().join('/');
+        return `${dateParts} ${time}`;
+      } else {
+        const now = new Date();
+        const dd = String(now.getDate()).padStart(2, '0');
+        const mm = String(now.getMonth() + 1).padStart(2, '0');
+        const yyyy = now.getFullYear();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        return `${dd}/${mm}/${yyyy} ${hours}:${minutes}`;
+      }
+    }
+    
+    function calculateNetWeight() {
+      const grosswt = parseFloat(document.getElementById('grosswt').value) || 0;
+      const tarewt = parseFloat(document.getElementById('tarewt').value) || 0;
+      const netwt = (grosswt - tarewt).toFixed(3);
+      document.getElementById('netwtDisplay').textContent = netwt;
+      return netwt;
+    }
+    
+    function generatePassHTML(srno, datetime, vehicleno, material, roypass, grosswt, tarewt, netwt) {
+      return `
+    <div>
+      <div class="box">
+        <div>
+          <div class=" text-xl p-0" style="margin: 0px; padding-left: 175px; padding-bottom : 18px;">
+            <div class=" text-xl" style="font-family: 'Arvo', serif; font-weight: 700; "><span class="underline"><u>WEIGHING BRIDGE PASS</u></span></div> 
+            <div class=" text-sm font-bold " style="font-family: 'Arvo', serif; padding-left : 100px;">CHIKHLI</div>
+          </div>
+          <div style="font-family: 'Courier New', Courier, monospace;">
+            <div class="flex justify-between text-sm border-t border-black box-border p-0" style="margin: 0px; padding:px;  padding-left: 8px;">
+              <span><strong>SR. NO. :</strong> <strong>${srno}</strong></span>
+              <div style="padding-right: 8px;"><span><strong>CHL.NO. :</strong> <strong>${srno}</strong></span></div>
+            </div>
+            <div class=" p-0 "style="margin: 0px; padding-left: 8px; padding-bottom: 16px;">
+            <div class="text-sm" style="font-size: 15px;">DATE : ${datetime}</div>
+            <div class="text-sm" style="font-size: 15px;"><strong>PARTY NAME : CASE PAYMENT</strong></div>
+            <div class="text-sm" style="font-size: 15px;">SITE : SURAT</div>
+            </div>
+          </div>
+          <div class="border-t  border-black box-border p-0 text-sm" style="font-family: 'Courier New', Courier, monospace; padding-left: 8px; padding-bottom: 16px; ">
+            <div class="text-sm">VEHICLE NO. : ${vehicleno.toUpperCase()}</div>
+          </div>
+          <div class="border-t border-black box-border p-0 text-sm" style="font-family: 'Courier New', Courier, monospace; padding-left: 8px; padding-bottom: 16px;">
+            <div class="flex justify-between text-sm">
+              <span>MATERIAL : ${material}</span>
+              <div style="padding-right: 8px;"><span>GROSS WT. : ${parseFloat(grosswt).toFixed(3)}</span></div>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span>ROY. PASS NO. : ${roypass}</span>
+              <div style="padding-right: 8px;"><span>TARE WT. : ${parseFloat(tarewt).toFixed(3)}</span></div>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span>LOADING BY :</span>
+              <div style="padding-right: 8px;"><span><strong>NET WT. :</strong> ${netwt}</span></div>
+            </div>
+          </div>
+          <div class=" border-t border-black box-border p-0 " style="font-family: 'Courier New', Courier, monospace; padding-left: 8px; padding-bottom: 16px;">
+            <div class="text-sm">RECEIVER'S SIGN : _____________________</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+    }
+
+
+    function generatePasses() {
+    const srno = document.getElementById('srno').value || '751';
+    const vehicleno = document.getElementById('vehicleno').value || 'GJ05BX1625';
+    const material = document.getElementById('material').value || '20 MM';
+    const roypass = document.getElementById('roypass').value || '26199';
+    const grosswt = parseFloat(document.getElementById('grosswt').value) || 0;
+    const tarewt = parseFloat(document.getElementById('tarewt').value) || 0;
+    const netwt = calculateNetWeight();
+    const datetime = getCurrentDateTime();
+
+    let passes = '';
+    for (let i = 0; i < 3; i++) {
+      passes += generatePassHTML(srno, datetime, vehicleno, material, roypass, grosswt, tarewt, netwt);
+      if (i < 2) {
+        passes += `<div class="border-t-2 border-dashed border-slate-400 h-0.2 my-8 w-full"></div>`;
+      }
+    }
+
+    document.getElementById('a4page').innerHTML = passes;
+    document.getElementById('outputSection').classList.remove('hidden');
+    document.getElementById('pdfBtn').disabled = false;
+
+    document.getElementById('outputSection').scrollIntoView({
+      behavior: 'smooth'
+    });
+  }
+
+      function downloadPDF() {
+        const a4page = document.getElementById('a4page');
+        const opt = {
+          margin: 0,
+          filename: 'Weighing_Bridge_Passes.pdf',
+          html2canvas: { scale: 2 },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+        html2pdf().set(opt).from(a4page).save();
+      }
+      
+      function downloadJPEG() {
+        const a4page = document.getElementById('a4page');
+        html2canvas(a4page, { scale: 2 }).then(canvas => {
+          const link = document.createElement('a');
+          link.href = canvas.toDataURL('image/jpeg', 1.0);
+          link.download = 'Weighing_Bridge_Passes.jpg';
+          link.click();
+        });
+      }
+
+      function printPasses() {
+        window.print();
+      }
+      
+    </script>
+  </body>
+</html>
