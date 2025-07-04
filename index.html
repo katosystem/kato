@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modern Login Page</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .container {
+      position: relative;
+      width: 100%;
+      max-width: 400px;
+      padding: 20px;
+    }
+
+    .login-card {
+      background: rgba(190, 189, 189, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 40px 30px;
+      box-shadow: 0 15px 35px rgba(148, 148, 148, 0.2);
+      border: 1px solid rgba(105, 105, 105, 0.1);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .login-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(110, 109, 109, 0.1) 0%, rgba(2, 2, 2, 0) 70%);
+      z-index: -1;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .logo {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 auto 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .logo i {
+      font-size: 36px;
+      color: rgb(8, 8, 8);
+    }
+
+    .header h1 {
+      color: rgb(10, 10, 10);
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 5px;
+      letter-spacing: 0.5px;
+    }
+
+    .header p {
+      color: rgba(6, 6, 6, 0.8);
+      font-size: 14px;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 25px;
+    }
+
+    .input-group i {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(61, 61, 61, 0.7);
+      font-size: 18px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 15px 15px 15px 45px;
+      background: rgba(248, 247, 247, 0.1);
+      border: 1px solid rgba(47, 46, 46, 0.2);
+      border-radius: 50px;
+      font-size: 16px;
+      color: rgb(241, 239, 239);
+      transition: all 0.3s ease;
+      outline: none;
+    }
+
+    .input-group input::placeholder {
+      color: rgba(6, 6, 6, 0.5);
+    }
+
+    .input-group input:focus {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(44, 44, 44, 0.4);
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+    }
+
+    .options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      font-size: 14px;
+    }
+
+    .remember {
+      display: flex;
+      align-items: center;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .remember input {
+      margin-right: 8px;
+      accent-color: #be3915;
+    }
+
+
+    .login-btn {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      border: none;
+      border-radius: 50px;
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      margin-bottom: 20px;
+      letter-spacing: 0.5px;
+    }
+
+    .login-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .login-btn:active {
+      transform: translateY(0);
+    }
+
+    @keyframes float {
+      0% {
+        transform: translate(0, 0) rotate(0deg);
+      }
+      25% {
+        transform: translate(20px, 30px) rotate(90deg);
+      }
+      50% {
+        transform: translate(0, 60px) rotate(180deg);
+      }
+      75% {
+        transform: translate(-20px, 30px) rotate(270deg);
+      }
+      100% {
+        transform: translate(0, 0) rotate(360deg);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .login-card {
+        padding: 30px 20px;
+      }
+      .header h1 {
+        font-size: 24px;
+      }
+    }
+    
+  </style>
+</head>
+<body>
+  <div class="floating"></div>
+  <div class="floating"></div>
+  <div class="floating"></div>
+  
+  <div class="container">
+    <div class="login-card">
+      <div class="header">
+        <div class="logo">
+          <i class="fas fa-lock"></i>
+        </div>
+        <h1>Welcome Back</h1>
+        <p>Sign in to continue to your account</p>
+      </div>
+      
+      <div class="input-group">
+        <i class="fas fa-user"></i>
+        <input type="text" id="username" placeholder="Username"  autocomplete="off" style="color: black;">
+      </div>
+      
+      <div class="input-group">
+        <i class="fas fa-key"></i>
+        <input type="password" id="password" placeholder="Password" style="color: black;">
+      </div>
+      
+      <div class="options">
+        <label class="remember">
+          <input type="checkbox"> Remember me
+        </label>
+      </div>
+      
+      <button class="login-btn" onclick="login()">LOGIN</button>
+      
+      <div class="message" id="message"></div>
+      
+      </div>
+    </div>
+
+  <script>
+    // Hardcoded credentials
+    const validUsername = "shiv";
+    const validPassword = "6565";
+    
+    function login() {
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const message = document.getElementById('message');
+      
+      // Reset message
+      message.classList.remove('show');
+      
+      setTimeout(() => {
+        if (username === validUsername && password === validPassword) {
+          // Show success message
+          message.textContent = "Login successful! Redirecting...";
+          message.style.color = "#4caf50";
+          message.style.background = "rgba(76, 175, 80, 0.1)";
+          message.classList.add('show');
+          
+          // Redirect after delay
+          setTimeout(() => {
+            window.location.href = "kato.html";
+          }, 1500);
+        } else {
+          // Show error message
+          message.textContent = "Invalid ID or password. Please try again.";
+          message.style.color = "#ff6b6b";
+          message.style.background = "rgba(255, 107, 107, 0.1)";
+          message.classList.add('show');
+          
+          // Shake animation
+          document.querySelector('.login-card').animate([
+            { transform: 'translateX(0)' },
+            { transform: 'translateX(-10px)' },
+            { transform: 'translateX(10px)' },
+            { transform: 'translateX(0)' }
+          ], {
+            duration: 300,
+            iterations: 1
+          });
+        }
+      }, 300);
+    }   
+    
+    // Add event listener for Enter key
+    document.getElementById('password').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        login();
+      }
+    });
+  </script>
+</body>
+</html>
