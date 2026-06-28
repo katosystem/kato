@@ -102,7 +102,7 @@ app.get('/api/material-stats', async (req, res) => {
 initDatabase().then(() => {
   app.listen(PORT, () => {
     console.log(`Kato server running on port ${PORT}`);
-    console.log(`Login: http://localhost:${PORT}/login.html`);
+    console.log(`Login: http://localhost:${PORT}/index.html`);
   });
 }).catch(err => {
   console.error('Failed to connect to MongoDB Atlas:', err.message);
