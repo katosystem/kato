@@ -137,14 +137,41 @@
       font-family: 'Courier New', Courier, monospace;
     }
 
+    .input-field.error {
+      border-color: #ef4444;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+    }
+
+    .required-mark {
+      color: #ef4444;
+    }
+
+    .note-error {
+      color: #ef4444;
+      font-size: 13px;
+      margin-top: 6px;
+      display: none;
+    }
+
+    .note-error.show {
+      display: block;
+    }
+
   </style>
 </head>
 <body>
   <div class="max-w-6xl mx-auto">
     <!-- Header -->
-    <header class="text-center mb-8">
-      <h1 class="header-title text-4xl md:text-5xl font-bold text-dark mb-2">WEIGHING BRIDGE PASS SYSTEM</h1>
-      <p class="text-lg text-slate-600">Generate professional weighing bridge passes with ease</p>
+    <header class="relative mb-8">
+      <div class="absolute top-0 right-0 flex gap-2">
+        <button type="button" onclick="logout()" class="btn bg-red-600 hover:bg-red-700 px-4 py-2 text-white text-sm">
+          <i class="fas fa-sign-out-alt mr-1"></i>Logout
+        </button>
+      </div>
+      <div class="text-center">
+        <h1 class="header-title text-4xl md:text-5xl font-bold text-dark mb-2">WEIGHING BRIDGE PASS SYSTEM</h1>
+        <p class="text-lg text-slate-600">Generate professional weighing bridge passes with ease</p>
+      </div>
     </header>
     
     <!-- Form Section -->
@@ -198,6 +225,15 @@
           <input type="text" id="manualTime" placeholder="HH:MM" class="input-field w-full p-3 rounded-lg focus:outline-none" />
         </div>
       </div>
+
+      <div class="mb-6">
+        <label class="block text-sm font-medium text-slate-700 mb-1">
+          Note <span class="required-mark">*</span>
+        </label>
+        <textarea id="note" rows="3" placeholder="Enter note (required)" required
+          class="input-field w-full p-3 rounded-lg focus:outline-none resize-y"></textarea>
+        <p id="noteError" class="note-error">Note is required. Please write a note before generating passes.</p>
+      </div>
       
       <div class="flex flex-wrap gap-4 justify-center mt-8">
         <button type="button" onclick="generatePasses()" class="btn btn-primary px-8 py-3 text-white text-lg">
@@ -215,17 +251,7 @@
     
     <!-- Output Section -->
     <section id="outputSection" class="hidden">
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-2xl font-bold text-dark">Generated Passes</h2>
-        <div class="flex gap-2">
-          <button onclick="downloadPDF()" class="btn btn-secondary px-4 py-2 text-white">
-            <i class="fas fa-file-pdf mr-1"></i>PDF
-          </button>
-          <button onclick="printPasses()" class="btn bg-slate-700 px-4 py-2 text-white">
-            <i class="fas fa-print mr-1"></i>Print
-          </button>
-        </div>
-      </div>
+      <h2 class="text-2xl font-bold text-dark mb-4">Generated Passes</h2>
       
       <!-- A4 Output Container -->
       <div id="a4page" class="mx-auto bg-white border" style="width: 200mm; min-height: 200mm; padding-left: 20mm; padding-right: 20mm; padding-top: 10mm; padding-bottom: 10mm;">
@@ -235,8 +261,35 @@
   </div>
 
   <script>
+    const SESSION_KEY = 'katoLoggedIn';
+    const AUTO_LOGOUT_MS = 30 * 60 * 1000;
+    let autoLogoutTimer = null;
+
+    function logout() {
+      sessionStorage.removeItem(SESSION_KEY);
+      window.location.href = 'login.html';
+    }
+
+    function resetAutoLogoutTimer() {
+      if (autoLogoutTimer) clearTimeout(autoLogoutTimer);
+      autoLogoutTimer = setTimeout(function() {
+        alert('Session expired. You have been logged out after 30 minutes.');
+        logout();
+      }, AUTO_LOGOUT_MS);
+    }
+
+    function checkAuth() {
+      if (sessionStorage.getItem(SESSION_KEY) !== 'true' || sessionStorage.getItem('katoUser') !== 'shiv') {
+        window.location.href = 'login.html';
+        return false;
+      }
+      resetAutoLogoutTimer();
+      return true;
+    }
+
     // Initialize with current date/time
     document.addEventListener('DOMContentLoaded', function() {
+      if (!checkAuth()) return;
       const now = new Date();
       const dd = String(now.getDate()).padStart(2, '0');
       const mm = String(now.getMonth() + 1).padStart(2, '0');
@@ -251,7 +304,29 @@
       vehicleInput.addEventListener('input', function() {
         this.value = this.value.toUpperCase();
       });
+
+      document.getElementById('note').addEventListener('input', function() {
+        if (this.value.trim()) {
+          this.classList.remove('error');
+          document.getElementById('noteError').classList.remove('show');
+        }
+      });
     });
+
+    function validateNote() {
+      const noteEl = document.getElementById('note');
+      const note = noteEl.value.trim();
+      const noteError = document.getElementById('noteError');
+      if (!note) {
+        noteEl.classList.add('error');
+        noteError.classList.add('show');
+        noteEl.focus();
+        return false;
+      }
+      noteEl.classList.remove('error');
+      noteError.classList.remove('show');
+      return note;
+    }
     
     function getCurrentDateTime() {
       let date = document.getElementById('manualDate').value;
@@ -326,6 +401,18 @@
 
 
     function generatePasses() {
+    const note = validateNote();
+    if (!note) return;
+
+    const now = new Date();
+    const dd = String(now.getDate()).padStart(2, '0');
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const yyyy = now.getFullYear();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    document.getElementById('manualDate').value = `${yyyy}-${mm}-${dd}`;
+    document.getElementById('manualTime').value = `${hours}:${minutes}`;
+
     const srno = document.getElementById('srno').value || '751';
     const vehicleno = document.getElementById('vehicleno').value || 'GJ05BX1625';
     const material = document.getElementById('material').value || '20 MM';
@@ -334,6 +421,8 @@
     const tarewt = parseFloat(document.getElementById('tarewt').value) || 0;
     const netwt = calculateNetWeight();
     const datetime = getCurrentDateTime();
+    const passDate = document.getElementById('manualDate').value;
+    const passTime = document.getElementById('manualTime').value;
 
     let passes = '';
     for (let i = 0; i < 3; i++) {
@@ -345,25 +434,32 @@
 
     document.getElementById('a4page').innerHTML = passes;
     document.getElementById('outputSection').classList.remove('hidden');
-    document.getElementById('pdfBtn').disabled = false;
 
     document.getElementById('outputSection').scrollIntoView({
       behavior: 'smooth'
     });
   }
 
-      function downloadPDF() {
-        const a4page = document.getElementById('a4page');
-        const opt = {
-          margin: 0,
-          filename: 'Weighing_Bridge_Passes.pdf',
-          html2canvas: { scale: 2 },
-          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        };
-        html2pdf().set(opt).from(a4page).save();
-      }
-      
       function downloadJPEG() {
+        const note = validateNote();
+        if (!note) return;
+
+        const srno = document.getElementById('srno').value || '751';
+        const vehicleno = document.getElementById('vehicleno').value || 'GJ05BX1625';
+        const material = document.getElementById('material').value || '20 MM';
+        const roypass = document.getElementById('roypass').value || '26199';
+        const grosswt = parseFloat(document.getElementById('grosswt').value) || 0;
+        const tarewt = parseFloat(document.getElementById('tarewt').value) || 0;
+        const netwt = calculateNetWeight();
+        const passDate = document.getElementById('manualDate').value;
+        const passTime = document.getElementById('manualTime').value;
+
+        savePassToDatabase({
+          srno, vehicleno, material, roypass,
+          grosswt, tarewt, netwt: parseFloat(netwt),
+          pass_date: passDate, pass_time: passTime, note
+        });
+
         const a4page = document.getElementById('a4page');
         html2canvas(a4page, { scale: 2 }).then(canvas => {
           const link = document.createElement('a');
@@ -376,6 +472,31 @@
       function printPasses() {
         window.print();
       }
+
+    async function savePassToDatabase(data) {
+      try {
+        const res = await fetch('/api/passes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        if (res.ok) {
+          showToast('Pass saved to database');
+        } else if (res.status === 400) {
+          showToast('Note is required', true);
+        }
+      } catch (e) {
+        console.warn('Database save failed — is the server running?', e);
+      }
+    }
+
+    function showToast(msg, isError) {
+      const toast = document.createElement('div');
+      toast.textContent = msg;
+      toast.style.cssText = 'position:fixed;bottom:24px;right:24px;background:' + (isError ? '#ef4444' : '#10b981') + ';color:white;padding:12px 24px;border-radius:10px;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,0.15);z-index:9999';
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
       
     </script>
   </body>

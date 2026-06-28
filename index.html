@@ -221,6 +221,14 @@
         <input type="password" id="password" placeholder="Password" style="color: black;">
       </div>
       
+      <div class="input-group">
+        <i class="fas fa-compass"></i>
+        <select id="destination" style="width: 100%; padding: 15px 15px 15px 45px; background: rgba(248, 247, 247, 0.1); border: 1px solid rgba(47, 46, 46, 0.2); border-radius: 50px; font-size: 16px; color: black; outline: none; cursor: pointer;">
+          <option value="kato.html">Generate Pass</option>
+          <option value="dashboard.html">Dashboard</option>
+        </select>
+      </div>
+      
       <div class="options">
         <label class="remember">
           <input type="checkbox"> Remember me
@@ -235,50 +243,70 @@
     </div>
 
   <script>
-    // Hardcoded credentials
-    const validUsername = "shiv";
-    const validPassword = "6565";
-    
-    function login() {
+    async function login() {
       const username = document.getElementById('username').value.trim();
       const password = document.getElementById('password').value.trim();
       const message = document.getElementById('message');
       
-      // Reset message
       message.classList.remove('show');
       
-      setTimeout(() => {
-        if (username === validUsername && password === validPassword) {
-          // Show success message
+      try {
+        const res = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          const dest = document.getElementById('destination').value;
+          
+          if (dest === 'dashboard.html' && username !== 'shivbhumi') {
+            message.textContent = "Access denied! 'shivbhumi' required for Dashboard.";
+            message.style.color = "#ff6b6b";
+            message.style.background = "rgba(255, 107, 107, 0.1)";
+            message.classList.add('show');
+            return;
+          }
+          
+          if (dest === 'kato.html' && username !== 'shiv') {
+            message.textContent = "Access denied! 'shiv' required for Generate Pass.";
+            message.style.color = "#ff6b6b";
+            message.style.background = "rgba(255, 107, 107, 0.1)";
+            message.classList.add('show');
+            return;
+          }
+
           message.textContent = "Login successful! Redirecting...";
           message.style.color = "#4caf50";
           message.style.background = "rgba(76, 175, 80, 0.1)";
           message.classList.add('show');
           
-          // Redirect after delay
           setTimeout(() => {
-            window.location.href = "kato.html";
+            sessionStorage.setItem('katoLoggedIn', 'true');
+            sessionStorage.setItem('katoUser', username);
+            window.location.href = dest;
           }, 1500);
         } else {
-          // Show error message
           message.textContent = "Invalid ID or password. Please try again.";
           message.style.color = "#ff6b6b";
           message.style.background = "rgba(255, 107, 107, 0.1)";
           message.classList.add('show');
           
-          // Shake animation
           document.querySelector('.login-card').animate([
             { transform: 'translateX(0)' },
             { transform: 'translateX(-10px)' },
             { transform: 'translateX(10px)' },
             { transform: 'translateX(0)' }
-          ], {
-            duration: 300,
-            iterations: 1
-          });
+          ], { duration: 300, iterations: 1 });
         }
-      }, 300);
-    }   
+      } catch (e) {
+        message.textContent = "Cannot connect to server. Run: node server.js";
+        message.style.color = "#ff6b6b";
+        message.style.background = "rgba(255, 107, 107, 0.1)";
+        message.classList.add('show');
+      }
+    }
     
     // Add event listener for Enter key
     document.getElementById('password').addEventListener('keypress', function(e) {
